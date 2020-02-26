@@ -2,19 +2,19 @@ serviceConfig:
   scheme: http://
   hostName: 0.0.0.0
   port: 12345
-  path: /api/gateway
+  path: /api/g
 
 loggerConfig:
   outputDir: ./logs/
   outputFile: gateway.log
 
 databaseConfig:
-  dbUsername: username
-  dbPassword: password
-  dbHostname: hostname
-  dbPort: 3306
+  dbUsername: cs122bg21
+  dbPassword: xCYEjH6vnBy9!
+  dbHostname: localhost
+  dbPort: 3310
   dbDriver: com.mysql.cj.jdbc.Driver
-  dbName: dbname
+  dbName: cs122bg21
   dbSettings: ?autoReconnect=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=PST
 
 threadConfig:
@@ -62,6 +62,7 @@ billingEndpoints:
   cartClear: /cart/clear
   orderPlace: /order/place
   orderRetrieve: /order/retrieve
+  orderComplete: /order/complete
   
 
 

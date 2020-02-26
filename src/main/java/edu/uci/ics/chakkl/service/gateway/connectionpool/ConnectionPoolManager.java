@@ -1,8 +1,9 @@
-package edu.uci.ics.UCNETID.service.gateway.connectionpool;
+package edu.uci.ics.chakkl.service.gateway.connectionpool;
 
 import com.zaxxer.hikari.HikariConfig;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -56,14 +57,13 @@ public class ConnectionPoolManager
      * Once you request a connection it is up to you to give it back
      * to the connection pool
      */
-    public Connection requestCon()
-    {
+    public Connection requestCon() throws SQLException {
         // TODO request connections from hikariConPool
-        return null;
+        return hikariConPool.getConnection();
     }
 
-    public void releaseCon(Connection con)
-    {
+    public void releaseCon(Connection con) throws SQLException {
         // TODO release connections back to hikariConPool
+        con.close();
     }
 }

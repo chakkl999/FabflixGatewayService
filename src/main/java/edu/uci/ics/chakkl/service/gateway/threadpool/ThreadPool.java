@@ -1,4 +1,4 @@
-package edu.uci.ics.UCNETID.service.gateway.threadpool;
+package edu.uci.ics.chakkl.service.gateway.threadpool;
 
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
@@ -20,14 +20,19 @@ public class ThreadPool
      * any thread requesting from it if the queue is empty
      * but only if you use the correct function
      */
-    private ThreadPool(int numWorkers)
-    {
+    private ThreadPool(int numWorkers) {
         this.numWorkers = numWorkers;
 
         workers = new ArrayList<>();
         queue = new LinkedBlockingQueue<>();
 
         // TODO more work is needed to create the threads
+        for(int i = 0 ; i < numWorkers; ++i)
+        {
+            Worker worker = Worker.CreateWorker(i, this);
+            workers.add(worker);
+            worker.start();
+        }
     }
 
     public static ThreadPool createThreadPool(int numWorkers)
@@ -43,15 +48,14 @@ public class ThreadPool
      * Make sure to use the correct functions that will
      * block a thread if the queue is unavailable or empty
      */
-    ClientRequest takeRequest()
-    {
+    ClientRequest takeRequest() throws InterruptedException {
         // TODO *take* the request from the queue
-        return null;
+        return queue.take();
     }
 
-    public void putRequest()
-    {
+    public void putRequest(ClientRequest request) throws InterruptedException {
         // TODO *put* the request into the queue
+        queue.put(request);
     }
 
 }
