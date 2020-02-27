@@ -129,7 +129,11 @@ public class Util {
             Response emailValid = isSessionValid(header);
             if (emailValid != null) {
                 ServiceLogger.LOGGER.info("Session invalid.");
-                return emailValid;
+                Response.ResponseBuilder builder = Response.status(Response.Status.OK).entity(emailValid.readEntity(String.class));
+                builder = builder.header("email", header.getEmail());
+                builder = builder.header("session_id", header.getSession_id());
+                builder = builder.header("transaction_id", header.getTransaction_id());
+                return builder.build();
             }
         }
         String transaction_id = TransactionGenerator.generate();
@@ -151,7 +155,11 @@ public class Util {
         if(header.getEmail() != null) {
             if (emailValid != null) {
                 ServiceLogger.LOGGER.info("Session invalid.");
-                return emailValid;
+                Response.ResponseBuilder builder = Response.status(Response.Status.OK).entity(emailValid.readEntity(String.class));
+                builder = builder.header("email", header.getEmail());
+                builder = builder.header("session_id", header.getSession_id());
+                builder = builder.header("transaction_id", header.getTransaction_id());
+                return builder.build();
             }
         }
         String transaction_id = TransactionGenerator.generate();

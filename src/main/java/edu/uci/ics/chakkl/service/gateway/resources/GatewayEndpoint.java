@@ -30,7 +30,11 @@ public class GatewayEndpoint {
             Response emailValid = Util.isSessionValid(header);
             if (emailValid != null) {
                 ServiceLogger.LOGGER.info("Session invalid.");
-                return emailValid;
+                Response.ResponseBuilder builder = Response.status(Response.Status.OK).entity(emailValid.readEntity(String.class));
+                builder = builder.header("email", header.getEmail());
+                builder = builder.header("session_id", header.getSession_id());
+                builder = builder.header("transaction_id", header.getTransaction_id());
+                return builder.build();
             }
         }
 //        ServiceLogger.LOGGER.info("Check if there's a response");
@@ -46,7 +50,7 @@ public class GatewayEndpoint {
             if(rs.next()) {
                 ServiceLogger.LOGGER.info("Has response.");
 //                System.out.println(rs.getBytes("response").toString());
-                Response.ResponseBuilder builder = Response.status(rs.getInt("http_status")).entity(rs.getBytes("response"));
+                Response.ResponseBuilder builder = Response.status(rs.getInt("http_status")).entity(rs.getString("response"));
                 builder = builder.header("email", header.getEmail());
                 builder = builder.header("session_id", header.getSession_id());
                 builder = builder.header("transaction_id", header.getTransaction_id());

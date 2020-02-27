@@ -53,7 +53,7 @@ public class Worker extends Thread {
                 ps.setString(1, request.getTransaction_id());
                 ps.setString(2, request.getEmail());
                 ps.setString(3, request.getSession_id());
-                ps.setBytes(4, response.readEntity(byte[].class));
+                ps.setString(4, response.readEntity(String.class));
                 ps.setInt(5, response.getStatus());
                 ps.executeUpdate();
             } catch (Exception e) {
@@ -84,7 +84,7 @@ public class Worker extends Thread {
                 ps.setString(1, request.getTransaction_id());
                 ps.setString(2, request.getEmail());
                 ps.setString(3, request.getSession_id());
-                ps.setBytes(4, response.readEntity(byte[].class));
+                ps.setString(4, response.readEntity(String.class));
                 ps.setInt(5, response.getStatus());
                 ps.executeUpdate();
             } catch (Exception e) {
