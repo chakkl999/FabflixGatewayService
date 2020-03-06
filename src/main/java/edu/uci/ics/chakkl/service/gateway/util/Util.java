@@ -76,7 +76,7 @@ public class Util {
         return response;
     }
 
-    public static Response isSessionValid(Header header)
+    public static SessionResponseModel isSessionValid(Header header)
     {
         SessionRequestModel requestModel = new SessionRequestModel(header.getEmail(), header.getSession_id());
 
@@ -105,7 +105,7 @@ public class Util {
             header.setSession_id(responseModel.getSession_id());
             return null;
         }
-        return response;
+        return responseModel;
     }
 
     public static Response return204(String transaction_id, long request_delay, Header header)
@@ -126,10 +126,10 @@ public class Util {
     {
         Header header = new Header(headers);
         if(header.getEmail() != null) {
-            Response emailValid = isSessionValid(header);
+            SessionResponseModel emailValid = isSessionValid(header);
             if (emailValid != null) {
                 ServiceLogger.LOGGER.info("Session invalid.");
-                Response.ResponseBuilder builder = Response.status(Response.Status.OK).entity(emailValid.readEntity(String.class));
+                Response.ResponseBuilder builder = Response.status(Response.Status.OK).entity(emailValid);
                 builder = builder.header("email", header.getEmail());
                 builder = builder.header("session_id", header.getSession_id());
                 builder = builder.header("transaction_id", header.getTransaction_id());
@@ -151,15 +151,20 @@ public class Util {
     public static Response buildGet(HttpHeaders headers, String url, String path, HashMap<String,String> query)
     {
         Header header = new Header(headers);
-        Response emailValid = isSessionValid(header);
+        SessionResponseModel emailValid = isSessionValid(header);
         if(header.getEmail() != null) {
             if (emailValid != null) {
                 ServiceLogger.LOGGER.info("Session invalid.");
-                Response.ResponseBuilder builder = Response.status(Response.Status.OK).entity(emailValid.readEntity(String.class));
-                builder = builder.header("email", header.getEmail());
-                builder = builder.header("session_id", header.getSession_id());
-                builder = builder.header("transaction_id", header.getTransaction_id());
-                return builder.build();
+                try {
+                    Response.ResponseBuilder builder = Response.status(Response.Status.OK).entity(emailValid);
+                    builder = builder.header("email", header.getEmail());
+                    builder = builder.header("session_id", header.getSession_id());
+                    builder = builder.header("transaction_id", header.getTransaction_id());
+                    ServiceLogger.LOGGER.info("Session invalid.");
+                    return builder.build();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
             }
         }
         String transaction_id = TransactionGenerator.generate();

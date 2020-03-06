@@ -19,7 +19,8 @@ public class MoviesEndpoints {
     @Produces(MediaType.APPLICATION_JSON)
     public Response search(@Context HttpHeaders headers, @QueryParam("title") String title, @QueryParam("year") Integer year,
                            @QueryParam("director") String director, @QueryParam("genre") String genre, @QueryParam("hidden") Boolean hidden,
-                           @QueryParam("limit") Integer limit, @QueryParam("orderby") String orderby, @QueryParam("direction") String direction)
+                           @QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset, @QueryParam("orderby") String orderby,
+                           @QueryParam("direction") String direction)
     {
         ServiceLogger.LOGGER.info("Requesting search.");
         HashMap<String,String> query = new HashMap<>();
@@ -35,6 +36,8 @@ public class MoviesEndpoints {
             query.put("hidden", hidden.toString());
         if(limit != null)
             query.put("limit", limit.toString());
+        if(offset != null)
+            query.put("offset", offset.toString());
         if(orderby != null)
             query.put("orderby", orderby);
         if(direction != null)
@@ -61,7 +64,7 @@ public class MoviesEndpoints {
         if(direction != null)
             query.put("direction", direction);
         MoviesConfigs config = GatewayService.getMoviesConfigs();
-        return Util.buildGet(headers, config.getScheme()+config.getHostName()+":"+config.getPort()+config.getPath(), config.getBrowsePath()+"/"+phrase, query);
+        return Util.buildGet(headers, config.getScheme()+config.getHostName()+":"+config.getPort()+config.getPath(), config.getBrowsePath()+phrase, query);
     }
 
     @Path("get/{movie_id}")
@@ -71,7 +74,7 @@ public class MoviesEndpoints {
     {
         ServiceLogger.LOGGER.info("Requesting get.");
         MoviesConfigs config = GatewayService.getMoviesConfigs();
-        return Util.buildGet(headers, config.getScheme()+config.getHostName()+":"+config.getPort()+config.getPath(), config.getGetPath()+"/"+movie_id, null);
+        return Util.buildGet(headers, config.getScheme()+config.getHostName()+":"+config.getPort()+config.getPath(), config.getGetPath()+movie_id, null);
     }
 
     @Path("thumbnail")
@@ -143,6 +146,6 @@ public class MoviesEndpoints {
     {
         ServiceLogger.LOGGER.info("Requesting people get.");
         MoviesConfigs config = GatewayService.getMoviesConfigs();
-        return Util.buildGet(headers, config.getScheme()+config.getHostName()+":"+config.getPort()+config.getPath(), config.getPeopleGetPath()+"/"+person_id, null);
+        return Util.buildGet(headers, config.getScheme()+config.getHostName()+":"+config.getPort()+config.getPath(), config.getPeopleGetPath()+person_id, null);
     }
 }

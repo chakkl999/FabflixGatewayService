@@ -88,6 +88,7 @@ public class BillingEndpoints {
     {
         ServiceLogger.LOGGER.info("Requesting order retrieve");
         BillingConfigs config = GatewayService.getBillingConfigs();
+        System.out.println("URL:" + config.getScheme()+config.getHostName()+":"+config.getPort()+config.getPath() + config.getOrderRetrievePath());
         return Util.buildPost(headers, jsonBytes, config.getScheme()+config.getHostName()+":"+config.getPort()+config.getPath(), config.getOrderRetrievePath());
     }
 

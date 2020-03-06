@@ -2,6 +2,7 @@ package edu.uci.ics.chakkl.service.gateway.resources;
 
 import edu.uci.ics.chakkl.service.gateway.GatewayService;
 import edu.uci.ics.chakkl.service.gateway.logger.ServiceLogger;
+import edu.uci.ics.chakkl.service.gateway.models.SessionResponseModel;
 import edu.uci.ics.chakkl.service.gateway.util.Header;
 import edu.uci.ics.chakkl.service.gateway.util.Util;
 
@@ -27,10 +28,10 @@ public class GatewayEndpoint {
         ServiceLogger.LOGGER.info("Requesting report");
         Header header = new Header(headers);
         if(header.getEmail() != null) {
-            Response emailValid = Util.isSessionValid(header);
+            SessionResponseModel emailValid = Util.isSessionValid(header);
             if (emailValid != null) {
                 ServiceLogger.LOGGER.info("Session invalid.");
-                Response.ResponseBuilder builder = Response.status(Response.Status.OK).entity(emailValid.readEntity(String.class));
+                Response.ResponseBuilder builder = Response.status(Response.Status.OK).entity(emailValid);
                 builder = builder.header("email", header.getEmail());
                 builder = builder.header("session_id", header.getSession_id());
                 builder = builder.header("transaction_id", header.getTransaction_id());
@@ -49,7 +50,7 @@ public class GatewayEndpoint {
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
                 ServiceLogger.LOGGER.info("Has response.");
-//                System.out.println(rs.getBytes("response").toString());
+//                System.out.println(rs.getString("response"));
                 Response.ResponseBuilder builder = Response.status(rs.getInt("http_status")).entity(rs.getString("response"));
                 builder = builder.header("email", header.getEmail());
                 builder = builder.header("session_id", header.getSession_id());
@@ -70,10 +71,10 @@ public class GatewayEndpoint {
             }
             GatewayService.getConnectionPoolManager().releaseCon(con);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             return Util.internal_server_error(header);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             return Util.internal_server_error(header);
         }
 //        System.out.println("not ready yet");

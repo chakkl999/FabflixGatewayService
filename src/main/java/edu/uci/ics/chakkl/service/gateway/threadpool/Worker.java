@@ -33,6 +33,7 @@ public class Worker extends Thread {
             client.register(JacksonFeature.class);
 
             ServiceLogger.LOGGER.info("Building WebTarget...");
+            ServiceLogger.LOGGER.info("URL: " + request.getURI() + request.getEndpoint());
             WebTarget webTarget = client.target(request.getURI()).path(request.getEndpoint());
             if(request.getQuery() != null) {
                 for(Map.Entry<String, String> entry : request.getQuery().entrySet()) {
